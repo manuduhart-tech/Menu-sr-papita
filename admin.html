@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cocina - Pedidos</title>
+</head>
+<body onload="escucharPedidos()">
+  <h1>📋 Pedidos en vivo</h1>
+  <ul id="lista-pedidos"></ul>
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+    // Configuración Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCdLdvJG1M3t8FgL985ExGwnjsALwZ5JVg",
+      authDomain: "menu-sr-papita.firebaseapp.com",
+      databaseURL: "https://menu-sr-papita-default-rtdb.firebaseio.com",
+      projectId: "menu-sr-papita",
+      storageBucket: "menu-sr-papita.firebasestorage.app",
+      messagingSenderId: "396377207044",
+      appId: "1:396377207044:web:908a094deac37f15762051",
+      measurementId: "G-SC2SJJ4RZ0"
+    };
+
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Escuchar pedidos en vivo
+    window.escucharPedidos = function() {
+      const pedidosRef = ref(db, "pedidos");
+      onValue(pedidosRef, (snapshot) => {
+        const lista = document.getElementById("lista-pedidos");
+        lista.innerHTML = "";
+        snapshot.forEach((childSnapshot) => {
+          const pedido = childSnapshot.val();
+          const li = document.createElement("li");
+          li.textContent = pedido.producto + " ⏰ " + pedido.hora;
+          lista.appendChild(li);
+        });
+      });
+    }
+  </script>
+</body>
+</html>

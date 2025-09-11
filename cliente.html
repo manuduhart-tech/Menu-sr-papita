@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Menú - Caja</title>
+</head>
+<body>
+  <h1>🍽️ Nuestro Menú</h1>
+
+  <h2>🍟 Conos de Papas</h2>
+  <button onclick="mandarPedido('Cono Chico')">Pedir Cono Chico</button>
+  <button onclick="mandarPedido('Cono Grande')">Pedir Cono Grande</button>
+
+  <h2>🍗 Nuggets de Pollo</h2>
+  <button onclick="mandarPedido('Nuggets 6u')">Pedir Nuggets (6 unidades)</button>
+  <button onclick="mandarPedido('Nuggets 12u')">Pedir Nuggets (12 unidades)</button>
+
+  <h2>🎯 Combos</h2>
+  <button onclick="mandarPedido('Combo Papas + Nuggets')">Pedir Combo</button>
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+    // Configuración Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCdLdvJG1M3t8FgL985ExGwnjsALwZ5JVg",
+      authDomain: "menu-sr-papita.firebaseapp.com",
+      databaseURL: "https://menu-sr-papita-default-rtdb.firebaseio.com",
+      projectId: "menu-sr-papita",
+      storageBucket: "menu-sr-papita.firebasestorage.app",
+      messagingSenderId: "396377207044",
+      appId: "1:396377207044:web:908a094deac37f15762051",
+      measurementId: "G-SC2SJJ4RZ0"
+    };
+
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Mandar pedido
+    window.mandarPedido = function(producto) {
+      push(ref(db, "pedidos"), {
+        producto: producto,
+        hora: new Date().toLocaleTimeString()
+      });
+      alert("✅ Pedido enviado a la cocina");
+    }
+  </script>
+</body>
+</html>
