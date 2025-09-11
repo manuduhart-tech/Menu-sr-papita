@@ -1,22 +1,21 @@
 // firebase.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCdLdvJG1M3t8FgL985ExGwnjsALwZ5JVg",
-  authDomain: "menu-sr-papita.firebaseapp.com",
-  databaseURL: "https://menu-sr-papita-default-rtdb.firebaseio.com",
-  projectId: "menu-sr-papita",
-  storageBucket: "menu-sr-papita.appspot.com",
-  messagingSenderId: "396377207044",
-  appId: "1:396377207044:web:908a094deac37f15762051"
+  apiKey: "...",
+  authDomain: "...",
+  databaseURL: "...",
+  projectId: "...",
+  storageBucket: "...",
+  messagingSenderId: "...",
+  appId: "..."
 };
 
-// Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Función para enviar un pedido
+// Función para enviar pedidos
 export function enviarPedido(pedido) {
   push(ref(db, "pedidos"), pedido);
 }
