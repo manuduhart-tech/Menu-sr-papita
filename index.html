@@ -2,69 +2,494 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Sr. Papita - Caja</title>
+  <title>Sr. Papita - Menú</title>
   <style>
     body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to right, #ff6f00, #ff9800);
       margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #ff7e5f, #ffb347);
+      padding: 0;
     }
-    header {
+
+    .container {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      padding: 10px 30px;
-      background: #fff;
-      border-bottom: 2px solid #eee;
-    }
-    header h1 {
-      font-size: 24px;
-      color: #ff5722;
-    }
-    main {
-      padding: 20px;
-      display: grid;
-      grid-template-columns: 2fr 1fr;
+      margin: 20px;
       gap: 20px;
     }
-    .menu, .carrito {
+
+    /* ---------------- MENU ---------------- */
+    .menu {
+      flex: 2;
       background: #fff;
-      border-radius: 15px;
+      border-radius: 16px;
       padding: 20px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-    .menu h2, .carrito h2 {
-      font-size: 20px;
-      margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+
+    .menu h2 {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 20px;
     }
+
     .tabs {
       display: flex;
+      justify-content: center;
       gap: 10px;
       margin-bottom: 20px;
     }
-    .tab {
-      flex: 1;
-      text-align: center;
-      padding: 10px;
+
+    .tabs button {
+      padding: 10px 20px;
+      border: none;
       border-radius: 10px;
-      border: 2px solid #ddd;
+      background: #eee;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: bold;
     }
-    .tab.activo {
-      background: #ff5722;
+
+    .tabs button.active {
+      background: #ff6f00;
       color: #fff;
-      border-color: #ff5722;
     }
+
     .productos {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: #fff8e1;
+      border-radius: 12px;
+      padding: 20px;
+      width: 200px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .icon {
+      font-size: 35px;
+      margin-bottom: 10px;
+    }
+
+    .card h3 {
+      margin: 10px 0 5px;
+    }
+
+    .card p {
+      margin: 3px 0;
+      color: #555;
+    }
+
+    .card .peso {
+      color: #ff5722;
+      font-weight: bold;
+    }
+
+    .card .precio {
+      font-size: 20px;
+      font-weight: bold;
+      color: #e65100;
+      margin: 10px 0;
+    }
+
+    .card button {
+      background: #ff6f00;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      width: 100%;
+    }
+
+    .card button:hover {
+      background: #e65100;
+    }
+
+    /* ---------------- CARRITO ---------------- */
+    .carrito {
+      flex: 1;
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      height: fit-content;
+    }
+
+    .carrito h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .carrito-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .carrito-item span {
+      font-size: 14px;
+    }
+
+    .cantidad {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+
+    .cantidad button {
+      background: #ff6f00;
+      border: none;
+      color: white;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .total {
+      font-weight: bold;
+      font-size: 18px;
+      margin: 20px 0;
+      text-align: right;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .btn-confirmar {
+      background: #4caf50;
+      color: white;
+    }
+
+    .btn-vaciar {
+      background: #f44336;
+      color: white;
+    }
+
+    .btn-confirmar:hover {
+      background: #388e3c;
+    }
+
+    .btn-vaciar:hover {
+      background: #d32f2f;
+    }
+
+    /* ---------------- MODAL SALSAS ---------------- */
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      width: 350px;
+      text-align: center;
+    }
+
+    .modal-content h3 {
+      margin-bottom: 15px;
+    }
+
+    .salsas-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
+      gap: 10px;
     }
-    .card {
+
+    .salsas-grid button {
+      background: #fff;
+      border: 2px solid #eee;
+      border-radius: 12px;
+      padding: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .salsas-grid button:hover {
+      background: #ffecb3;
+      border-color: #ff9800;
+    }
+
+    .salsas-grid button.active {
+      background: #ff9800;
+      color: white;
+      border-color: #e65100;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- MENU -->
+    <div class="menu">
+      <h2>🍴 Nuestro Menú</h2>
+      <div class="tabs">
+        <button class="active" onclick="mostrarSeccion(event,'papas')">🍟 Conos de Papas</button>
+        <button onclick="mostrarSeccion(event,'nuggets')">🍗 Nuggets de Pollo</button>
+        <button onclick="mostrarSeccion(event,'combos')">🎯 Combos</button>
+      </div>
+
+      <!-- Sección Papas -->
+      <div id="papas" class="productos">
+        <div class="card">
+          <div class="icon">🧡</div>
+          <h3>Cono Chico</h3>
+          <p>Perfecto para picar</p>
+          <p class="peso">150g de papas</p>
+          <p class="precio">$2.500</p>
+          <button onclick="seleccionarProducto('Cono Chico', 2500)">Elegir Chico</button>
+        </div>
+        <div class="card">
+          <div class="icon">🤎</div>
+          <h3>Cono Mediano</h3>
+          <p>El más popular</p>
+          <p class="peso">250g de papas</p>
+          <p class="precio">$3.500</p>
+          <button onclick="seleccionarProducto('Cono Mediano', 3500)">Elegir Mediano</button>
+        </div>
+        <div class="card">
+          <div class="icon">🤍</div>
+          <h3>Cono Grande</h3>
+          <p>Para gran apetito</p>
+          <p class="peso">400g de papas</p>
+          <p class="precio">$4.500</p>
+          <button onclick="seleccionarProducto('Cono Grande', 4500)">Elegir Grande</button>
+        </div>
+      </div>
+
+      <!-- Sección Nuggets -->
+      <div id="nuggets" class="productos" style="display:none;">
+        <div class="card">
+          <div class="icon">🍗</div>
+          <h3>Bandeja Chica</h3>
+          <p>6 nuggets crujientes</p>
+          <p class="precio">$3.000</p>
+          <button onclick="seleccionarProducto('Bandeja Chica', 3000)">Elegir Chica</button>
+        </div>
+        <div class="card">
+          <div class="icon">🍗🍗</div>
+          <h3>Bandeja Mediana</h3>
+          <p>10 nuggets crujientes</p>
+          <p class="precio">$4.500</p>
+          <button onclick="seleccionarProducto('Bandeja Mediana', 4500)">Elegir Mediana</button>
+        </div>
+        <div class="card">
+          <div class="icon">🍗🍗🍗</div>
+          <h3>Bandeja Grande</h3>
+          <p>15 nuggets crujientes</p>
+          <p class="precio">$6.500</p>
+          <button onclick="seleccionarProducto('Bandeja Grande', 6500)">Elegir Grande</button>
+        </div>
+      </div>
+
+      <!-- Sección Combos -->
+      <div id="combos" class="productos" style="display:none;">
+        <p>🎯 Muy pronto combos disponibles</p>
+      </div>
+    </div>
+
+    <!-- CARRITO -->
+    <div class="carrito">
+      <h2>🛒 Tu Carrito (<span id="contadorCarrito">0</span>)</h2>
+      <div id="items-carrito"></div>
+      <p class="total">Total: $<span id="total">0</span></p>
+      <button class="btn btn-confirmar" onclick="confirmarPedido()">🍴 Confirmar Pedido</button>
+      <button class="btn btn-vaciar" onclick="vaciarCarrito()">🗑 Vaciar Carrito</button>
+    </div>
+  </div>
+
+  <!-- MODAL PARA SALSAS -->
+  <div id="modalSalsas" class="modal">
+    <div class="modal-content">
+      <h3>Elige tu salsa</h3>
+      <div class="salsas-grid">
+        <button onclick="seleccionarSalsa('Sin Salsa')">⭕ Sin Salsa</button>
+        <button onclick="seleccionarSalsa('Ketchup')">🍅 Ketchup</button>
+        <button onclick="seleccionarSalsa('Mayonesa')">🥄 Mayonesa</button>
+        <button onclick="seleccionarSalsa('Cheddar')">🧀 Cheddar</button>
+        <button onclick="seleccionarSalsa('Cheddar y Bacon')">🥓 Cheddar y Bacon</button>
+        <button onclick="seleccionarSalsa('Salsa Alioli')">🧄 Salsa Alioli</button>
+        <button onclick="seleccionarSalsa('Crema con Ciboulette')">🌿 Crema con Ciboulette</button>
+        <button onclick="seleccionarSalsa('Mostaza y Miel')">🍯 Mostaza y Miel</button>
+        <button onclick="seleccionarSalsa('Salsa Ranch')">🥗 Salsa Ranch</button>
+        <button onclick="seleccionarSalsa('Salsa Tasty')">🌶 Salsa Tasty</button>
+        <button onclick="seleccionarSalsa('Barbacoa')">🔥 Barbacoa</button>
+      </div>
+      <br>
+      <button onclick="agregarConSalsa()">Agregar al carrito</button>
+      <button onclick="cerrarModal()">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getDatabase, ref, push, get } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCdLdvJG1M3t8FgL985ExGwnjsALwZ5JVg",
+      authDomain: "menu-sr-papita.firebaseapp.com",
+      databaseURL: "https://menu-sr-papita-default-rtdb.firebaseio.com",
+      projectId: "menu-sr-papita",
+      storageBucket: "menu-sr-papita.appspot.com",
+      messagingSenderId: "396377207044",
+      appId: "1:396377207044:web:908a094deac37f15762051",
+      measurementId: "G-SC2SJJ4RZ0"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // ---------------- CARRITO ----------------
+    let carrito = [];
+    let productoSeleccionado = null;
+    let salsaSeleccionada = null;
+
+    function seleccionarProducto(nombre, precio) {
+      productoSeleccionado = { nombre, precio };
+      salsaSeleccionada = null;
+      document.getElementById("modalSalsas").style.display = "flex";
+    }
+
+    function cerrarModal() {
+      document.getElementById("modalSalsas").style.display = "none";
+    }
+
+    function seleccionarSalsa(salsa) {
+      salsaSeleccionada = salsa;
+
+      // Marcar botón activo
+      document.querySelectorAll(".salsas-grid button").forEach(btn => {
+        btn.classList.remove("active");
+        if (btn.textContent.includes(salsa)) btn.classList.add("active");
+      });
+    }
+
+    function agregarConSalsa() {
+      const salsa = salsaSeleccionada || "Sin Salsa";
+      const key = productoSeleccionado.nombre + " + " + salsa;
+
+      const existente = carrito.find(item => item.key === key);
+
+      if (existente) {
+        existente.cantidad++;
+      } else {
+        carrito.push({ key, nombre: productoSeleccionado.nombre, precio: productoSeleccionado.precio, salsa, cantidad: 1 });
+      }
+
+      cerrarModal();
+      renderCarrito();
+    }
+
+    function renderCarrito() {
+      const contenedor = document.getElementById("items-carrito");
+      contenedor.innerHTML = "";
+      let total = 0;
+      let contador = 0;
+
+      carrito.forEach((item, index) => {
+        total += item.precio * item.cantidad;
+        contador += item.cantidad;
+        const div = document.createElement("div");
+        div.classList.add("carrito-item");
+        div.innerHTML = `
+          <span>${item.nombre} (${item.salsa}) - $${item.precio.toLocaleString()} x ${item.cantidad}</span>
+          <div class="cantidad">
+            <button onclick="cambiarCantidad(${index}, -1)">-</button>
+            <button onclick="cambiarCantidad(${index}, 1)">+</button>
+          </div>
+        `;
+        contenedor.appendChild(div);
+      });
+
+      document.getElementById("total").textContent = total.toLocaleString();
+      document.getElementById("contadorCarrito").textContent = contador;
+    }
+
+    function cambiarCantidad(index, delta) {
+      carrito[index].cantidad += delta;
+      if (carrito[index].cantidad <= 0) carrito.splice(index, 1);
+      renderCarrito();
+    }
+
+    function vaciarCarrito() {
+      carrito = [];
+      renderCarrito();
+    }
+
+    async function confirmarPedido() {
+      if (carrito.length === 0) return alert("Tu carrito está vacío");
+
+      // Obtener último número de orden
+      const pedidosRef = ref(db, "pedidos");
+      const snapshot = await get(pedidosRef);
+      let ultimoId = 0;
+      snapshot.forEach(child => {
+        if (child.val().idOrden > ultimoId) ultimoId = child.val().idOrden;
+      });
+
+      const nuevoPedido = {
+        idOrden: ultimoId + 1,
+        items: carrito,
+        hora: new Date().toLocaleString()
+      };
+
+      await push(pedidosRef, nuevoPedido);
+
+      alert(`✅ Pedido confirmado\nTu número de orden es: ${nuevoPedido.idOrden}`);
+      vaciarCarrito();
+    }
+
+    window.mostrarSeccion = function(event, seccion) {
+      document.getElementById("papas").style.display = "none";
+      document.getElementById("nuggets").style.display = "none";
+      document.getElementById("combos").style.display = "none";
+      document.getElementById(seccion).style.display = "flex";
+
+      document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
+      event.target.classList.add("active");
+    }
+
+    // Exportar funciones al global
+    window.seleccionarProducto = seleccionarProducto;
+    window.cerrarModal = cerrarModal;
+    window.agregarConSalsa = agregarConSalsa;
+    window.vaciarCarrito = vaciarCarrito;
+    window.confirmarPedido = confirmarPedido;
+    window.cambiarCantidad = cambiarCantidad;
+    window.seleccionarSalsa = seleccionarSalsa;
+  </script>
+</body>
+</html>
       border: 2px solid #eee;
       border-radius: 10px;
       padding: 15px;
@@ -185,5 +610,6 @@
   </script>
 </body>
 </html>
+
 
 
