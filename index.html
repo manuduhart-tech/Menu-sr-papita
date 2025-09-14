@@ -1,7 +1,8 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sr. Papita - Menú</title>
   <style>
     body {
@@ -10,6 +11,45 @@
       margin: 0;
       padding: 0;
     }
+
+    /* ---------------- HEADER ---------------- */
+.header {
+  background: #fff;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 4px solid #ff6f00;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.header-left {
+  text-align: left;
+}
+
+.header-left h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #e65100;
+  font-weight: 900; /* más grueso */
+  font-family: 'Poppins', sans-serif;
+}
+
+.header-left p {
+  margin: 5px 0 0;
+  font-size: 16px;
+  color: #555;
+  font-style: italic;
+}
+
+.header-right img {
+  height: 70px;
+  width: 70px;
+  border-radius: 50%; /* redondear la imagen */
+  object-fit: cover;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
 
     .container {
       display: flex;
@@ -245,9 +285,109 @@
       color: white;
       border-color: #e65100;
     }
+
+    /* botones del modal */
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .modal-buttons .btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .modal-buttons .btn-confirmar {
+      background: #4caf50;
+      color: white;
+    }
+
+    .modal-buttons .btn-vaciar {
+      background: #f44336;
+      color: white;
+    }
+
+    .modal-buttons .btn-confirmar:hover {
+      background: #388e3c;
+    }
+
+    .modal-buttons .btn-vaciar:hover {
+      background: #d32f2f;
+    }
+
+    /* ---------------- TOAST ---------------- */
+    .toast {
+      visibility: hidden;
+      min-width: 260px;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      border-radius: 12px;
+      padding: 16px;
+      position: fixed;
+      z-index: 10000;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      font-size: 16px;
+      opacity: 0;
+      transition: opacity 0.5s, bottom 0.5s;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    .toast.show {
+      visibility: visible;
+      opacity: 1;
+      bottom: 60px;
+    }
+
+    /* ---------------- RESPONSIVE ---------------- */
+    @media (max-width: 1024px) {
+      .container {
+        flex-direction: column;
+      }
+      .menu, .carrito {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .tabs {
+        flex-direction: column;
+        gap: 5px;
+      }
+      .card {
+        width: 100%;
+      }
+      .modal-content {
+        width: 90%;
+      }
+      .carrito-item span {
+        font-size: 12px;
+      }
+      .header-right img {
+        height: 48px;
+        width: 48px;
+      }
+    }
   </style>
 </head>
 <body>
+  <header class="header">
+    <div class="header-left">
+      <h1>Sr. Papita</h1>
+      <p>Más papas, menos espera</p>
+    </div>
+    <div class="header-right">
+      <img src="logo-papita.png" alt="Logo Sr. Papita">
+    </div>
+  </header>
+
   <div class="container">
     <!-- MENU -->
     <div class="menu">
@@ -324,6 +464,7 @@
       <p class="total">Total: $<span id="total">0</span></p>
       <button class="btn btn-confirmar" onclick="confirmarPedido()">🍴 Confirmar Pedido</button>
       <button class="btn btn-vaciar" onclick="vaciarCarrito()">🗑 Vaciar Carrito</button>
+      <button class="btn btn-vaciar" onclick="reiniciarPedidos()">🔄 Reiniciar Pedidos</button>
     </div>
   </div>
 
@@ -332,28 +473,33 @@
     <div class="modal-content">
       <h3>Elige tu salsa</h3>
       <div class="salsas-grid">
-        <button onclick="seleccionarSalsa('Sin Salsa')">⭕ Sin Salsa</button>
-        <button onclick="seleccionarSalsa('Ketchup')">🍅 Ketchup</button>
-        <button onclick="seleccionarSalsa('Mayonesa')">🥄 Mayonesa</button>
-        <button onclick="seleccionarSalsa('Cheddar')">🧀 Cheddar</button>
-        <button onclick="seleccionarSalsa('Cheddar y Bacon')">🥓 Cheddar y Bacon</button>
-        <button onclick="seleccionarSalsa('Salsa Alioli')">🧄 Salsa Alioli</button>
-        <button onclick="seleccionarSalsa('Crema con Ciboulette')">🌿 Crema con Ciboulette</button>
-        <button onclick="seleccionarSalsa('Mostaza y Miel')">🍯 Mostaza y Miel</button>
-        <button onclick="seleccionarSalsa('Salsa Ranch')">🥗 Salsa Ranch</button>
-        <button onclick="seleccionarSalsa('Salsa Tasty')">🌶 Salsa Tasty</button>
-        <button onclick="seleccionarSalsa('Barbacoa')">🔥 Barbacoa</button>
+        <button data-salsa="Sin Salsa">⭕ Sin Salsa</button>
+        <button data-salsa="Ketchup">🍅 Ketchup</button>
+        <button data-salsa="Mayonesa">🥄 Mayonesa</button>
+        <button data-salsa="Cheddar">🧀 Cheddar</button>
+        <button data-salsa="Cheddar y Bacon">🥓 Cheddar y Bacon</button>
+        <button data-salsa="Salsa Alioli">🧄 Salsa Alioli</button>
+        <button data-salsa="Crema con Ciboulette">🌿 Crema con Ciboulette</button>
+        <button data-salsa="Mostaza y Miel">🍯 Mostaza y Miel</button>
+        <button data-salsa="Salsa Ranch">🥗 Salsa Ranch</button>
+        <button data-salsa="Salsa Tasty">🌶 Salsa Tasty</button>
+        <button data-salsa="Barbacoa">🔥 Barbacoa</button>
       </div>
       <br>
-      <button onclick="agregarConSalsa()">Agregar al carrito</button>
-      <button onclick="cerrarModal()">Cancelar</button>
+      <div class="modal-buttons">
+        <button class="btn btn-confirmar" onclick="agregarConSalsa()">✅ Agregar al carrito</button>
+        <button class="btn btn-vaciar" onclick="cerrarModal()">❌ Cancelar</button>
+      </div>
     </div>
   </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast"></div>
 
   <!-- Firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getDatabase, ref, push, get } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+    import { getDatabase, ref, push, get, set, remove } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCdLdvJG1M3t8FgL985ExGwnjsALwZ5JVg",
@@ -368,6 +514,18 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
+
+    // ---------------- TOAST ----------------
+    function mostrarToast(mensaje, color = "#333") {
+      const toast = document.getElementById("toast");
+      toast.innerHTML = mensaje; // permite usar emojis y texto simple
+      toast.style.backgroundColor = color;
+      toast.className = "toast show";
+      clearTimeout(toast._timeout);
+      toast._timeout = setTimeout(() => {
+        toast.className = "toast";
+      }, 3000);
+    }
 
     // ---------------- CARRITO ----------------
     let carrito = [];
@@ -387,12 +545,18 @@
     function seleccionarSalsa(salsa) {
       salsaSeleccionada = salsa;
 
-      // Marcar botón activo
       document.querySelectorAll(".salsas-grid button").forEach(btn => {
         btn.classList.remove("active");
-        if (btn.textContent.includes(salsa)) btn.classList.add("active");
+        if (btn.dataset.salsa === salsa) btn.classList.add("active");
       });
     }
+
+    // agregar evento a botones de salsas (se ejecuta luego del parseo del DOM)
+    document.querySelectorAll(".salsas-grid button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        seleccionarSalsa(btn.dataset.salsa);
+      });
+    });
 
     function agregarConSalsa() {
       const salsa = salsaSeleccionada || "Sin Salsa";
@@ -446,27 +610,53 @@
       renderCarrito();
     }
 
+    // ✅ confirmarPedido con contador global + toast
     async function confirmarPedido() {
-      if (carrito.length === 0) return alert("Tu carrito está vacío");
+      if (carrito.length === 0) {
+        mostrarToast("⚠️ El carrito está vacío", "#e53935");
+        return;
+      }
 
-      // Obtener último número de orden
-      const pedidosRef = ref(db, "pedidos");
-      const snapshot = await get(pedidosRef);
-      let ultimoId = 0;
-      snapshot.forEach(child => {
-        if (child.val().idOrden > ultimoId) ultimoId = child.val().idOrden;
-      });
+      try {
+        const contadorRef = ref(db, "contador/ultimoId");
+        const snapshot = await get(contadorRef);
 
-      const nuevoPedido = {
-        idOrden: ultimoId + 1,
-        items: carrito,
-        hora: new Date().toLocaleString()
-      };
+        let nuevoId = 1;
+        if (snapshot.exists()) {
+          nuevoId = snapshot.val() + 1;
+        }
 
-      await push(pedidosRef, nuevoPedido);
+        const nuevoPedido = {
+          idOrden: nuevoId,
+          items: carrito,
+          hora: new Date().toLocaleString(),
+          estado: "pendiente"
+        };
 
-      alert(`✅ Pedido confirmado\nTu número de orden es: ${nuevoPedido.idOrden}`);
-      vaciarCarrito();
+        await push(ref(db, "pedidos"), nuevoPedido);
+        await set(contadorRef, nuevoId);
+
+        mostrarToast(`✅ Pedido confirmado — N° ${nuevoPedido.idOrden}`, "#4caf50");
+        vaciarCarrito();
+      } catch (err) {
+        console.error(err);
+        mostrarToast("❌ Error al confirmar pedido", "#e53935");
+      }
+    }
+
+    // 🔄 Reiniciar pedidos (borra pedidos y deja contador en 0)
+    async function reiniciarPedidos() {
+      if (!confirm("⚠️ Esto borrará todos los pedidos y reiniciará el contador. ¿Seguro?")) return;
+
+      try {
+        await remove(ref(db, "pedidos"));
+        await set(ref(db, "contador/ultimoId"), 0);
+        mostrarToast("✅ Todos los pedidos fueron reiniciados", "#4caf50");
+        vaciarCarrito();
+      } catch (err) {
+        console.error(err);
+        mostrarToast("❌ Error al reiniciar pedidos", "#e53935");
+      }
     }
 
     window.mostrarSeccion = function(event, seccion) {
@@ -479,7 +669,6 @@
       event.target.classList.add("active");
     }
 
-    // Exportar funciones al global
     window.seleccionarProducto = seleccionarProducto;
     window.cerrarModal = cerrarModal;
     window.agregarConSalsa = agregarConSalsa;
@@ -487,10 +676,7 @@
     window.confirmarPedido = confirmarPedido;
     window.cambiarCantidad = cambiarCantidad;
     window.seleccionarSalsa = seleccionarSalsa;
+    window.reiniciarPedidos = reiniciarPedidos;
   </script>
 </body>
 </html>
-
-
-
-
