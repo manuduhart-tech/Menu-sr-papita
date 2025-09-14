@@ -120,17 +120,20 @@
       margin: 3px 0;
       font-size: 14px;
     }
-    .btn-cerrar {
+    .btn-cerrar, .btn-exportar {
       margin-top: 15px;
-      background: #e53935;
       border: none;
       padding: 10px;
       border-radius: 8px;
       color: white;
       font-weight: bold;
       cursor: pointer;
+      width: 100%;
     }
+    .btn-cerrar { background: #e53935; }
     .btn-cerrar:hover { background: #c62828; }
+    .btn-exportar { background: #ff9800; }
+    .btn-exportar:hover { background: #ef6c00; }
     @keyframes fadeIn {
       from { opacity: 0; transform: scale(0.9); }
       to { opacity: 1; transform: scale(1); }
@@ -177,11 +180,12 @@
         <h3>🍴 Detalle de Productos Vendidos</h3>
         <div id="detalleProductos">N/A</div>
       </div>
+      <button class="btn-exportar" onclick="exportarExcel()">📥 Exportar a Excel</button>
       <button class="btn-cerrar" onclick="cerrarResumen()">❌ Cerrar</button>
     </div>
   </div>
 
-  <!-- Firebase -->
+  <!-- Firebase + lógica -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
@@ -200,7 +204,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // 📊 Variables
     let totalPedidos = 0;
     let pedidosCompletados = 0;
     let totalVentas = 0;
@@ -263,22 +266,18 @@
     }
 
     window.abrirResumen = function() {
-      // Estadísticas
       document.getElementById("totalPedidos").textContent = totalPedidos;
       document.getElementById("pedidosCompletados").textContent = pedidosCompletados;
       document.getElementById("ventasTotales").textContent = totalVentas;
 
-      // Más vendidos
       const masVendido = Object.entries(productosVendidos).sort((a,b) => b[1]-a[1])[0];
       document.getElementById("productoMasVendido").textContent = masVendido ? masVendido[0] : "N/A";
       const salsaMas = Object.entries(salsasVendidas).sort((a,b) => b[1]-a[1])[0];
       document.getElementById("salsaMasVendida").textContent = salsaMas ? salsaMas[0] : "N/A";
 
-      // Análisis
       document.getElementById("ventaPromedio").textContent = totalPedidos > 0 ? (totalVentas / totalPedidos).toFixed(2) : 0;
       document.getElementById("eficiencia").textContent = totalPedidos > 0 ? ((pedidosCompletados / totalPedidos) * 100).toFixed(1) : 0;
 
-      // Detalle productos
       const detalleDiv = document.getElementById("detalleProductos");
       detalleDiv.innerHTML = "";
       if (Object.keys(productosVendidos).length === 0) {
@@ -315,6 +314,61 @@
       salsasVendidas = {};
       alert("📋 Se limpió el historial del resumen del día.");
     }
+
+    // 📥 Exportar Excel
+    window.exportarExcel = function() {
+      const data = [];
+
+      data.push(["📋 Estadísticas Generales"]);
+      data.push(["Total de pedidos", totalPedidos]);
+      data.push(["Pedidos completados", pedidosCompletados]);
+      data.push(["Ventas totales", totalVentas]);
+      data.push([]);
+
+      data.push(["🍴 Productos Vendidos"]);
+      data.push(["Producto", "Cantidad"]);
+      for (const [prod, cant] of Object.entries(productosVendidos)) {
+        data.push([prod, cant]);
+      }
+      data.push([]);
+
+      data.push(["🥫 Salsas Vendidas"]);
+      data.push(["Salsa", "Cantidad"]);
+      for (const [salsa, cant] of Object.entries(salsasVendidas)) {
+        data.push([salsa, cant]);
+      }
+
+      const ws = XLSX.utils.aoa_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+
+      // Aplicar estilos (títulos y resultados distintos)
+      const range = XLSX.utils.decode_range(ws["!ref"]);
+      for (let R = range.s.r; R <= range.e.r; ++R) {
+        const firstCell = ws[XLSX.utils.encode_cell({ r: R, c: 0 })];
+        if (!firstCell) continue;
+
+        if (R === 0 || firstCell.v === "Producto" || firstCell.v === "Salsa" || firstCell.v === "Total de pedidos" || firstCell.v === "Pedidos completados" || firstCell.v === "Ventas totales") {
+          firstCell.s = { font: { bold: true, color: { rgb: "FFFFFF" } }, fill: { fgColor: { rgb: "4CAF50" } } };
+          const secondCell = ws[XLSX.utils.encode_cell({ r: R, c: 1 })];
+          if (secondCell) {
+            secondCell.s = { font: { bold: true, color: { rgb: "FFFFFF" } }, fill: { fgColor: { rgb: "4CAF50" } } };
+          }
+        } else {
+          for (let C = range.s.c; C <= range.e.c; ++C) {
+            const cell = ws[XLSX.utils.encode_cell({ r: R, c: C })];
+            if (cell) {
+              cell.s = { fill: { fgColor: { rgb: "E8F5E9" } } };
+            }
+          }
+        }
+      }
+
+      XLSX.utils.book_append_sheet(wb, ws, "Resumen");
+      XLSX.writeFile(wb, "resumen-dia.xlsx");
+    }
   </script>
+
+  <!-- SheetJS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </body>
 </html>
