@@ -202,7 +202,7 @@
 
     .salsas-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 10px;
     }
 
@@ -308,23 +308,16 @@
   <!-- MODAL SALSAS -->
   <div id="modalSalsas" class="modal">
     <div class="modal-content">
-      <h3>Elige tu salsa</h3>
+      <h3>Elige tus salsas</h3>
       <div class="salsas-grid">
-        <button data-salsa="Sin Salsa">⭕ Sin Salsa</button>
         <button data-salsa="Ketchup">🍅 Ketchup</button>
         <button data-salsa="Mayonesa">🥄 Mayonesa</button>
-        <button data-salsa="Cheddar">🧀 Cheddar</button>
-        <button data-salsa="Cheddar y Bacon">🥓 Cheddar y Bacon</button>
-        <button data-salsa="Salsa Alioli">🧄 Salsa Alioli</button>
-        <button data-salsa="Crema con Ciboulette">🌿 Crema con Ciboulette</button>
         <button data-salsa="Mostaza y Miel">🍯 Mostaza y Miel</button>
-        <button data-salsa="Salsa Ranch">🥗 Salsa Ranch</button>
-        <button data-salsa="Salsa Tasty">🌶 Salsa Tasty</button>
-        <button data-salsa="Barbacoa">🔥 Barbacoa</button>
+        <button data-salsa="Cheddar">🧀 Cheddar</button>
       </div>
       <br>
       <div class="modal-buttons">
-        <button class="btn btn-confirmar" onclick="agregarConSalsa()">✅ Agregar al carrito</button>
+        <button class="btn btn-confirmar" onclick="agregarConSalsas()">✅ Agregar al carrito</button>
         <button class="btn btn-vaciar" onclick="cerrarModal()">❌ Cancelar</button>
       </div>
     </div>
@@ -363,11 +356,15 @@
 
     let carrito = [];
     let productoSeleccionado = null;
-    let salsaSeleccionada = null;
+    let salsaSeleccionada = []; // array para múltiples salsas
 
     function seleccionarProducto(nombre, precio) {
       productoSeleccionado = { nombre, precio };
-      salsaSeleccionada = null;
+      salsaSeleccionada = [];
+      // Limpiar botones activos
+      document.querySelectorAll(".salsas-grid button").forEach(btn => {
+        btn.classList.remove("active");
+      });
       document.getElementById("modalSalsas").style.display = "flex";
     }
 
@@ -375,26 +372,44 @@
       document.getElementById("modalSalsas").style.display = "none";
     }
 
-    function seleccionarSalsa(salsa) {
-      salsaSeleccionada = salsa;
+    function seleccionarSalsaMultiple(salsa) {
+      if (salsaSeleccionada.includes(salsa)) {
+        salsaSeleccionada = salsaSeleccionada.filter(s => s !== salsa);
+      } else {
+        salsaSeleccionada.push(salsa);
+      }
       document.querySelectorAll(".salsas-grid button").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.salsa === salsa);
+        btn.classList.toggle("active", salsaSeleccionada.includes(btn.dataset.salsa));
       });
     }
 
     document.querySelectorAll(".salsas-grid button").forEach(btn => {
-      btn.addEventListener("click", () => seleccionarSalsa(btn.dataset.salsa));
+      btn.addEventListener("click", () => seleccionarSalsaMultiple(btn.dataset.salsa));
     });
 
-    function agregarConSalsa() {
-      const salsa = salsaSeleccionada || "Sin Salsa";
-      const key = productoSeleccionado.nombre + " + " + salsa;
+    function agregarConSalsas() {
+      const salsas = salsaSeleccionada.length ? salsaSeleccionada : ["Sin Salsa"];
+      const key = productoSeleccionado.nombre + " + " + salsas.join(", ");
       const existente = carrito.find(i => i.key === key);
 
-      if (existente) existente.cantidad++;
-      else carrito.push({ key, ...productoSeleccionado, salsa, cantidad: 1 });
+      if (existente) {
+        existente.cantidad++;
+      } else {
+        carrito.push({
+          key,
+          ...productoSeleccionado,
+          salsa: salsas.join(", "),
+          cantidad: 1
+        });
+      }
 
       cerrarModal();
+      // Limpiar selección y quitar clases activas
+      salsaSeleccionada = [];
+      document.querySelectorAll(".salsas-grid button").forEach(btn => {
+        btn.classList.remove("active");
+      });
+
       renderCarrito();
     }
 
@@ -473,7 +488,7 @@
 
     window.seleccionarProducto = seleccionarProducto;
     window.cerrarModal = cerrarModal;
-    window.agregarConSalsa = agregarConSalsa;
+    window.agregarConSalsas = agregarConSalsas;
     window.vaciarCarrito = vaciarCarrito;
     window.confirmarPedido = confirmarPedido;
     window.cambiarCantidad = cambiarCantidad;
