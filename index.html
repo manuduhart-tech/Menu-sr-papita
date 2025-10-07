@@ -320,8 +320,9 @@
         <button data-salsa="Mayonesa">🥄 Mayonesa</button>
         <button data-salsa="Mostaza y Miel">🍯 Mostaza y Miel</button>
         <button data-salsa="Cheddar">🧀 Cheddar</button>
+        <button data-salsa="Sin Salsa">❌ Sin Salsa</button>
       </div>
-      <p style="margin-top:10px; font-weight:bold;">⚠️ Si eliges al menos una salsa, el pedido suma $500</p>
+      <p style="margin-top:10px; font-weight:bold;">⚠️ Si eliges al menos una salsa (excepto "Sin Salsa"), el pedido suma $500</p>
       <br>
       <div class="modal-buttons">
         <button class="btn btn-confirmar" onclick="agregarConSalsas()">✅ Siguiente</button>
@@ -390,10 +391,15 @@
     }
 
     function seleccionarSalsaMultiple(salsa) {
-      if (salsaSeleccionada.includes(salsa)) {
-        salsaSeleccionada = salsaSeleccionada.filter(s => s !== salsa);
+      if (salsa === "Sin Salsa") {
+        salsaSeleccionada = ["Sin Salsa"];
       } else {
-        salsaSeleccionada.push(salsa);
+        salsaSeleccionada = salsaSeleccionada.filter(s => s !== "Sin Salsa");
+        if (salsaSeleccionada.includes(salsa)) {
+          salsaSeleccionada = salsaSeleccionada.filter(s => s !== salsa);
+        } else {
+          salsaSeleccionada.push(salsa);
+        }
       }
       document.querySelectorAll(".salsas-grid button").forEach(btn => {
         btn.classList.toggle("active", salsaSeleccionada.includes(btn.dataset.salsa));
@@ -415,18 +421,12 @@
       const salsas = productoSeleccionado.salsasElegidas;
       let precioFinal = productoSeleccionado.precio;
 
-      // Suma $500 si hay al menos una salsa distinta de "Sin Salsa"
-      if (salsas.length > 0 && !(salsas.length === 1 && salsas[0] === "Sin Salsa")) {
-        precioFinal += 500;
-      }
-
-      // Suma $500 si eligió panceta
+      if (!salsas.includes("Sin Salsa")) precioFinal += 500; // $500 por salsas
       if (conPanceta) precioFinal += 500;
 
       const key = productoSeleccionado.nombre + " + " + salsas.join(", ") + (conPanceta ? " + Panceta" : " + Sin Panceta");
-      const descripcion = salsas.join(", ") + (conPanceta ? " + Panceta" : " + Sin Panceta");
-
       const existente = carrito.find(i => i.key === key);
+      const descripcion = salsas.join(", ") + (conPanceta ? " + Panceta" : " + Sin Panceta");
 
       if (existente) {
         existente.cantidad++;
