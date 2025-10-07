@@ -13,44 +13,40 @@
     }
 
     /* ---------------- HEADER ---------------- */
-.header {
-  background: #fff;
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 4px solid #ff6f00;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
+    .header {
+      background: #fff;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 4px solid #ff6f00;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
 
-.header-left {
-  text-align: left;
-}
+    .header-left h1 {
+      margin: 0;
+      font-size: 28px;
+      color: #e65100;
+      font-weight: 900;
+      font-family: 'Poppins', sans-serif;
+    }
 
-.header-left h1 {
-  margin: 0;
-  font-size: 28px;
-  color: #e65100;
-  font-weight: 900; /* más grueso */
-  font-family: 'Poppins', sans-serif;
-}
+    .header-left p {
+      margin: 5px 0 0;
+      font-size: 16px;
+      color: #555;
+      font-style: italic;
+    }
 
-.header-left p {
-  margin: 5px 0 0;
-  font-size: 16px;
-  color: #555;
-  font-style: italic;
-}
+    .header-right img {
+      height: 70px;
+      width: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
 
-.header-right img {
-  height: 70px;
-  width: 70px;
-  border-radius: 50%; /* redondear la imagen */
-  object-fit: cover;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-
+    /* ---------------- LAYOUT ---------------- */
     .container {
       display: flex;
       justify-content: space-between;
@@ -58,40 +54,21 @@
       gap: 20px;
     }
 
-    /* ---------------- MENU ---------------- */
-    .menu {
-      flex: 2;
+    .menu, .carrito {
       background: #fff;
       border-radius: 16px;
       padding: 20px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
+    .menu {
+      flex: 2;
+    }
+
     .menu h2 {
       text-align: center;
       font-size: 24px;
       margin-bottom: 20px;
-    }
-
-    .tabs {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .tabs button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 10px;
-      background: #eee;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .tabs button.active {
-      background: #ff6f00;
-      color: #fff;
     }
 
     .productos {
@@ -116,7 +93,7 @@
     }
 
     .icon {
-      font-size: 35px;
+      font-size: 40px;
       margin-bottom: 10px;
     }
 
@@ -125,16 +102,11 @@
     }
 
     .card p {
-      margin: 3px 0;
       color: #555;
+      margin: 5px 0;
     }
 
-    .card .peso {
-      color: #ff5722;
-      font-weight: bold;
-    }
-
-    .card .precio {
+    .precio {
       font-size: 20px;
       font-weight: bold;
       color: #e65100;
@@ -159,10 +131,6 @@
     /* ---------------- CARRITO ---------------- */
     .carrito {
       flex: 1;
-      background: #fff;
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       height: fit-content;
     }
 
@@ -178,16 +146,6 @@
       margin-bottom: 10px;
       padding: 10px;
       border-bottom: 1px solid #ddd;
-    }
-
-    .carrito-item span {
-      font-size: 14px;
-    }
-
-    .cantidad {
-      display: flex;
-      gap: 5px;
-      align-items: center;
     }
 
     .cantidad button {
@@ -218,25 +176,12 @@
       font-size: 16px;
     }
 
-    .btn-confirmar {
-      background: #4caf50;
-      color: white;
-    }
+    .btn-confirmar { background: #4caf50; color: white; }
+    .btn-vaciar { background: #f44336; color: white; }
+    .btn-confirmar:hover { background: #388e3c; }
+    .btn-vaciar:hover { background: #d32f2f; }
 
-    .btn-vaciar {
-      background: #f44336;
-      color: white;
-    }
-
-    .btn-confirmar:hover {
-      background: #388e3c;
-    }
-
-    .btn-vaciar:hover {
-      background: #d32f2f;
-    }
-
-    /* ---------------- MODAL SALSAS ---------------- */
+    /* ---------------- MODAL ---------------- */
     .modal {
       position: fixed;
       top: 0; left: 0;
@@ -255,10 +200,6 @@
       text-align: center;
     }
 
-    .modal-content h3 {
-      margin-bottom: 15px;
-    }
-
     .salsas-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -270,7 +211,6 @@
       border: 2px solid #eee;
       border-radius: 12px;
       padding: 10px;
-      font-size: 14px;
       cursor: pointer;
       transition: all 0.2s;
     }
@@ -286,42 +226,6 @@
       border-color: #e65100;
     }
 
-    /* botones del modal */
-    .modal-buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .modal-buttons .btn {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 15px;
-    }
-
-    .modal-buttons .btn-confirmar {
-      background: #4caf50;
-      color: white;
-    }
-
-    .modal-buttons .btn-vaciar {
-      background: #f44336;
-      color: white;
-    }
-
-    .modal-buttons .btn-confirmar:hover {
-      background: #388e3c;
-    }
-
-    .modal-buttons .btn-vaciar:hover {
-      background: #d32f2f;
-    }
-
-    /* ---------------- TOAST ---------------- */
     .toast {
       visibility: hidden;
       min-width: 260px;
@@ -340,40 +244,20 @@
       transition: opacity 0.5s, bottom 0.5s;
       box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     }
+
     .toast.show {
       visibility: visible;
       opacity: 1;
       bottom: 60px;
     }
 
-    /* ---------------- RESPONSIVE ---------------- */
     @media (max-width: 1024px) {
-      .container {
-        flex-direction: column;
-      }
-      .menu, .carrito {
-        width: 100%;
-      }
+      .container { flex-direction: column; }
     }
 
     @media (max-width: 600px) {
-      .tabs {
-        flex-direction: column;
-        gap: 5px;
-      }
-      .card {
-        width: 100%;
-      }
-      .modal-content {
-        width: 90%;
-      }
-      .carrito-item span {
-        font-size: 12px;
-      }
-      .header-right img {
-        height: 48px;
-        width: 48px;
-      }
+      .card { width: 100%; }
+      .modal-content { width: 90%; }
     }
   </style>
 </head>
@@ -392,68 +276,21 @@
     <!-- MENU -->
     <div class="menu">
       <h2>🍴 Nuestro Menú</h2>
-      <div class="tabs">
-        <button class="active" onclick="mostrarSeccion(event,'papas')">🍟 Conos de Papas</button>
-        <button onclick="mostrarSeccion(event,'nuggets')">🍗 Nuggets de Pollo</button>
-        <button onclick="mostrarSeccion(event,'combos')">🎯 Combos</button>
-      </div>
-
-      <!-- Sección Papas -->
-      <div id="papas" class="productos">
+      <div class="productos">
         <div class="card">
-          <div class="icon">🧡</div>
-          <h3>Cono Chico</h3>
-          <p>Perfecto para picar</p>
-          <p class="peso">150g de papas</p>
-          <p class="precio">$2.500</p>
-          <button onclick="seleccionarProducto('Cono Chico', 2500)">Elegir Chico</button>
+          <div class="icon">🍟</div>
+          <h3>Cono de Papas</h3>
+          <p>Crocantes y doradas</p>
+          <p class="precio">$3.000</p>
+          <button onclick="seleccionarProducto('Cono de Papas', 3000)">Elegir</button>
         </div>
-        <div class="card">
-          <div class="icon">🤎</div>
-          <h3>Cono Mediano</h3>
-          <p>El más popular</p>
-          <p class="peso">250g de papas</p>
-          <p class="precio">$3.500</p>
-          <button onclick="seleccionarProducto('Cono Mediano', 3500)">Elegir Mediano</button>
-        </div>
-        <div class="card">
-          <div class="icon">🤍</div>
-          <h3>Cono Grande</h3>
-          <p>Para gran apetito</p>
-          <p class="peso">400g de papas</p>
-          <p class="precio">$4.500</p>
-          <button onclick="seleccionarProducto('Cono Grande', 4500)">Elegir Grande</button>
-        </div>
-      </div>
-
-      <!-- Sección Nuggets -->
-      <div id="nuggets" class="productos" style="display:none;">
         <div class="card">
           <div class="icon">🍗</div>
-          <h3>Bandeja Chica</h3>
-          <p>6 nuggets crujientes</p>
+          <h3>Bandeja de Nuggets</h3>
+          <p>10 piezas crujientes</p>
           <p class="precio">$3.000</p>
-          <button onclick="seleccionarProducto('Bandeja Chica', 3000)">Elegir Chica</button>
+          <button onclick="seleccionarProducto('Bandeja de Nuggets', 3000)">Elegir</button>
         </div>
-        <div class="card">
-          <div class="icon">🍗🍗</div>
-          <h3>Bandeja Mediana</h3>
-          <p>10 nuggets crujientes</p>
-          <p class="precio">$4.500</p>
-          <button onclick="seleccionarProducto('Bandeja Mediana', 4500)">Elegir Mediana</button>
-        </div>
-        <div class="card">
-          <div class="icon">🍗🍗🍗</div>
-          <h3>Bandeja Grande</h3>
-          <p>15 nuggets crujientes</p>
-          <p class="precio">$6.500</p>
-          <button onclick="seleccionarProducto('Bandeja Grande', 6500)">Elegir Grande</button>
-        </div>
-      </div>
-
-      <!-- Sección Combos -->
-      <div id="combos" class="productos" style="display:none;">
-        <p>🎯 Muy pronto combos disponibles</p>
       </div>
     </div>
 
@@ -468,7 +305,7 @@
     </div>
   </div>
 
-  <!-- MODAL PARA SALSAS -->
+  <!-- MODAL SALSAS -->
   <div id="modalSalsas" class="modal">
     <div class="modal-content">
       <h3>Elige tu salsa</h3>
@@ -496,7 +333,7 @@
   <!-- TOAST -->
   <div id="toast" class="toast"></div>
 
-  <!-- Firebase -->
+  <!-- FIREBASE + JS -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getDatabase, ref, push, get, set, remove } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
@@ -515,19 +352,15 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // ---------------- TOAST ----------------
-    function mostrarToast(mensaje, color = "#333") {
+    function mostrarToast(mensaje, color="#333") {
       const toast = document.getElementById("toast");
-      toast.innerHTML = mensaje; // permite usar emojis y texto simple
+      toast.innerHTML = mensaje;
       toast.style.backgroundColor = color;
       toast.className = "toast show";
       clearTimeout(toast._timeout);
-      toast._timeout = setTimeout(() => {
-        toast.className = "toast";
-      }, 3000);
+      toast._timeout = setTimeout(() => toast.className = "toast", 3000);
     }
 
-    // ---------------- CARRITO ----------------
     let carrito = [];
     let productoSeleccionado = null;
     let salsaSeleccionada = null;
@@ -544,31 +377,22 @@
 
     function seleccionarSalsa(salsa) {
       salsaSeleccionada = salsa;
-
       document.querySelectorAll(".salsas-grid button").forEach(btn => {
-        btn.classList.remove("active");
-        if (btn.dataset.salsa === salsa) btn.classList.add("active");
+        btn.classList.toggle("active", btn.dataset.salsa === salsa);
       });
     }
 
-    // agregar evento a botones de salsas (se ejecuta luego del parseo del DOM)
     document.querySelectorAll(".salsas-grid button").forEach(btn => {
-      btn.addEventListener("click", () => {
-        seleccionarSalsa(btn.dataset.salsa);
-      });
+      btn.addEventListener("click", () => seleccionarSalsa(btn.dataset.salsa));
     });
 
     function agregarConSalsa() {
       const salsa = salsaSeleccionada || "Sin Salsa";
       const key = productoSeleccionado.nombre + " + " + salsa;
+      const existente = carrito.find(i => i.key === key);
 
-      const existente = carrito.find(item => item.key === key);
-
-      if (existente) {
-        existente.cantidad++;
-      } else {
-        carrito.push({ key, nombre: productoSeleccionado.nombre, precio: productoSeleccionado.precio, salsa, cantidad: 1 });
-      }
+      if (existente) existente.cantidad++;
+      else carrito.push({ key, ...productoSeleccionado, salsa, cantidad: 1 });
 
       cerrarModal();
       renderCarrito();
@@ -577,8 +401,7 @@
     function renderCarrito() {
       const contenedor = document.getElementById("items-carrito");
       contenedor.innerHTML = "";
-      let total = 0;
-      let contador = 0;
+      let total = 0, contador = 0;
 
       carrito.forEach((item, index) => {
         total += item.precio * item.cantidad;
@@ -610,21 +433,13 @@
       renderCarrito();
     }
 
-    // ✅ confirmarPedido con contador global + toast
     async function confirmarPedido() {
-      if (carrito.length === 0) {
-        mostrarToast("⚠️ El carrito está vacío", "#e53935");
-        return;
-      }
+      if (carrito.length === 0) return mostrarToast("⚠️ El carrito está vacío", "#e53935");
 
       try {
         const contadorRef = ref(db, "contador/ultimoId");
         const snapshot = await get(contadorRef);
-
-        let nuevoId = 1;
-        if (snapshot.exists()) {
-          nuevoId = snapshot.val() + 1;
-        }
+        const nuevoId = snapshot.exists() ? snapshot.val() + 1 : 1;
 
         const nuevoPedido = {
           idOrden: nuevoId,
@@ -635,7 +450,6 @@
 
         await push(ref(db, "pedidos"), nuevoPedido);
         await set(contadorRef, nuevoId);
-
         mostrarToast(`✅ Pedido confirmado — N° ${nuevoPedido.idOrden}`, "#4caf50");
         vaciarCarrito();
       } catch (err) {
@@ -644,10 +458,8 @@
       }
     }
 
-    // 🔄 Reiniciar pedidos (borra pedidos y deja contador en 0)
     async function reiniciarPedidos() {
       if (!confirm("⚠️ Esto borrará todos los pedidos y reiniciará el contador. ¿Seguro?")) return;
-
       try {
         await remove(ref(db, "pedidos"));
         await set(ref(db, "contador/ultimoId"), 0);
@@ -659,23 +471,12 @@
       }
     }
 
-    window.mostrarSeccion = function(event, seccion) {
-      document.getElementById("papas").style.display = "none";
-      document.getElementById("nuggets").style.display = "none";
-      document.getElementById("combos").style.display = "none";
-      document.getElementById(seccion).style.display = "flex";
-
-      document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
-      event.target.classList.add("active");
-    }
-
     window.seleccionarProducto = seleccionarProducto;
     window.cerrarModal = cerrarModal;
     window.agregarConSalsa = agregarConSalsa;
     window.vaciarCarrito = vaciarCarrito;
     window.confirmarPedido = confirmarPedido;
     window.cambiarCantidad = cambiarCantidad;
-    window.seleccionarSalsa = seleccionarSalsa;
     window.reiniciarPedidos = reiniciarPedidos;
   </script>
 </body>
