@@ -181,7 +181,7 @@
     .btn-confirmar:hover { background: #388e3c; }
     .btn-vaciar:hover { background: #d32f2f; }
 
-    /* ---------------- MODAL ---------------- */
+    /* ---------------- MODALES ---------------- */
     .modal {
       position: fixed;
       top: 0; left: 0;
@@ -200,13 +200,13 @@
       text-align: center;
     }
 
-    .salsas-grid {
+    .salsas-grid, .panceta-buttons {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
     }
 
-    .salsas-grid button {
+    .salsas-grid button, .panceta-buttons button {
       background: #fff;
       border: 2px solid #eee;
       border-radius: 12px;
@@ -215,7 +215,7 @@
       transition: all 0.2s;
     }
 
-    .salsas-grid button:hover {
+    .salsas-grid button:hover, .panceta-buttons button:hover {
       background: #ffecb3;
       border-color: #ff9800;
     }
@@ -226,6 +226,12 @@
       border-color: #e65100;
     }
 
+    /* Panceta: letras negras */
+    .panceta-buttons .btn {
+      color: black !important;
+    }
+
+    /* ---------------- TOAST ---------------- */
     .toast {
       visibility: hidden;
       min-width: 260px;
@@ -317,8 +323,19 @@
       </div>
       <br>
       <div class="modal-buttons">
-        <button class="btn btn-confirmar" onclick="agregarConSalsas()">✅ Agregar al carrito</button>
+        <button class="btn btn-confirmar" onclick="agregarConSalsas()">✅ Siguiente</button>
         <button class="btn btn-vaciar" onclick="cerrarModal()">❌ Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PANCETA -->
+  <div id="modalPanceta" class="modal">
+    <div class="modal-content">
+      <h3>¿Deseas agregar panceta?</h3>
+      <div class="panceta-buttons">
+        <button class="btn btn-confirmar" onclick="agregarPanceta(true)">🥓 Con Panceta (+$500)</button>
+        <button class="btn btn-vaciar" onclick="agregarPanceta(false)">❌ Sin Panceta</button>
       </div>
     </div>
   </div>
@@ -356,20 +373,19 @@
 
     let carrito = [];
     let productoSeleccionado = null;
-    let salsaSeleccionada = []; // array para múltiples salsas
+    let salsaSeleccionada = [];
+    let conPanceta = false;
 
     function seleccionarProducto(nombre, precio) {
       productoSeleccionado = { nombre, precio };
       salsaSeleccionada = [];
-      // Limpiar botones activos
-      document.querySelectorAll(".salsas-grid button").forEach(btn => {
-        btn.classList.remove("active");
-      });
+      document.querySelectorAll(".salsas-grid button").forEach(btn => btn.classList.remove("active"));
       document.getElementById("modalSalsas").style.display = "flex";
     }
 
     function cerrarModal() {
       document.getElementById("modalSalsas").style.display = "none";
+      document.getElementById("modalPanceta").style.display = "none";
     }
 
     function seleccionarSalsaMultiple(salsa) {
@@ -388,27 +404,38 @@
     });
 
     function agregarConSalsas() {
-      const salsas = salsaSeleccionada.length ? salsaSeleccionada : ["Sin Salsa"];
-      const key = productoSeleccionado.nombre + " + " + salsas.join(", ");
+      productoSeleccionado.salsasElegidas = salsaSeleccionada.length ? salsaSeleccionada : ["Sin Salsa"];
+      cerrarModal();
+      document.getElementById("modalPanceta").style.display = "flex";
+    }
+
+    function agregarPanceta(seleccion) {
+      conPanceta = seleccion;
+      const salsas = productoSeleccionado.salsasElegidas;
+      let precioFinal = productoSeleccionado.precio;
+      if (conPanceta) precioFinal += 500;
+
+      const key = productoSeleccionado.nombre + " + " + salsas.join(", ") + (conPanceta ? " + Panceta" : " + Sin Panceta");
       const existente = carrito.find(i => i.key === key);
+
+      const descripcion = salsas.join(", ") + (conPanceta ? " + Panceta" : " + Sin Panceta");
 
       if (existente) {
         existente.cantidad++;
       } else {
         carrito.push({
           key,
-          ...productoSeleccionado,
-          salsa: salsas.join(", "),
+          nombre: productoSeleccionado.nombre,
+          precio: precioFinal,
+          salsa: descripcion,
           cantidad: 1
         });
       }
 
-      cerrarModal();
-      // Limpiar selección y quitar clases activas
+      document.getElementById("modalPanceta").style.display = "none";
       salsaSeleccionada = [];
-      document.querySelectorAll(".salsas-grid button").forEach(btn => {
-        btn.classList.remove("active");
-      });
+      conPanceta = false;
+      document.querySelectorAll(".salsas-grid button").forEach(btn => btn.classList.remove("active"));
 
       renderCarrito();
     }
@@ -489,6 +516,7 @@
     window.seleccionarProducto = seleccionarProducto;
     window.cerrarModal = cerrarModal;
     window.agregarConSalsas = agregarConSalsas;
+    window.agregarPanceta = agregarPanceta;
     window.vaciarCarrito = vaciarCarrito;
     window.confirmarPedido = confirmarPedido;
     window.cambiarCantidad = cambiarCantidad;
