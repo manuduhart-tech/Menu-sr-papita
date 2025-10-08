@@ -519,6 +519,14 @@
         mostrarToast("❌ Error al enviar el pedido", "#e53935");
       }
     };
+window.seleccionarProducto = function(nombre, precio) {
+  productoSeleccionado = { nombre, precio };
+  salsaSeleccionada = [];
+  document.querySelectorAll(".salsas-grid button").forEach(btn => btn.classList.remove("active"));
+
+  // ✅ Todos los productos (incluido Combo) abren el modal de salsas
+  document.getElementById("modalSalsas").style.display = "flex";
+};
 
     window.reiniciarPedidos = async function() {
       try {
