@@ -226,7 +226,6 @@
       border-color: #e65100;
     }
 
-    /* Panceta: letras negras */
     .panceta-buttons .btn {
       color: black !important;
     }
@@ -297,6 +296,13 @@
           <p class="precio">$3.000</p>
           <button onclick="seleccionarProducto('Bandeja de Nuggets', 3000)">Elegir</button>
         </div>
+        <div class="card">
+          <div class="icon">🍱</div>
+          <h3>Combo</h3>
+          <p>Bandeja de nuggets y papas fritas</p>
+          <p class="precio">$4.500</p>
+          <button onclick="seleccionarProducto('Combo', 4500)">Elegir</button>
+        </div>
       </div>
     </div>
 
@@ -345,7 +351,6 @@
   <!-- TOAST -->
   <div id="toast" class="toast"></div>
 
-  <!-- FIREBASE + JS -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getDatabase, ref, push, get, set, remove } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
@@ -378,17 +383,24 @@
     let salsaSeleccionada = [];
     let conPanceta = false;
 
-    function seleccionarProducto(nombre, precio) {
+    // FUNCIONES GLOBALES
+    window.seleccionarProducto = function(nombre, precio) {
       productoSeleccionado = { nombre, precio };
       salsaSeleccionada = [];
       document.querySelectorAll(".salsas-grid button").forEach(btn => btn.classList.remove("active"));
-      document.getElementById("modalSalsas").style.display = "flex";
-    }
 
-    function cerrarModal() {
+      if(nombre === "Combo"){
+          productoSeleccionado.salsasElegidas = ["Sin Salsa"];
+          document.getElementById("modalPanceta").style.display = "flex";
+      } else {
+          document.getElementById("modalSalsas").style.display = "flex";
+      }
+    };
+
+    window.cerrarModal = function() {
       document.getElementById("modalSalsas").style.display = "none";
       document.getElementById("modalPanceta").style.display = "none";
-    }
+    };
 
     function seleccionarSalsaMultiple(salsa) {
       if (salsa === "Sin Salsa") {
@@ -410,18 +422,18 @@
       btn.addEventListener("click", () => seleccionarSalsaMultiple(btn.dataset.salsa));
     });
 
-    function agregarConSalsas() {
+    window.agregarConSalsas = function() {
       productoSeleccionado.salsasElegidas = salsaSeleccionada.length ? salsaSeleccionada : ["Sin Salsa"];
       cerrarModal();
       document.getElementById("modalPanceta").style.display = "flex";
-    }
+    };
 
-    function agregarPanceta(seleccion) {
+    window.agregarPanceta = function(seleccion) {
       conPanceta = seleccion;
       const salsas = productoSeleccionado.salsasElegidas;
       let precioFinal = productoSeleccionado.precio;
 
-      if (!salsas.includes("Sin Salsa")) precioFinal += 500; // $500 por salsas
+      if (!salsas.includes("Sin Salsa")) precioFinal += 500;
       if (conPanceta) precioFinal += 500;
 
       const key = productoSeleccionado.nombre + " + " + salsas.join(", ") + (conPanceta ? " + Panceta" : " + Sin Panceta");
@@ -446,7 +458,7 @@
       document.querySelectorAll(".salsas-grid button").forEach(btn => btn.classList.remove("active"));
 
       renderCarrito();
-    }
+    };
 
     function renderCarrito() {
       const contenedor = document.getElementById("items-carrito");
@@ -472,18 +484,18 @@
       document.getElementById("contadorCarrito").textContent = contador;
     }
 
-    function cambiarCantidad(index, delta) {
+    window.cambiarCantidad = function(index, delta) {
       carrito[index].cantidad += delta;
       if (carrito[index].cantidad <= 0) carrito.splice(index, 1);
       renderCarrito();
-    }
+    };
 
-    function vaciarCarrito() {
+    window.vaciarCarrito = function() {
       carrito = [];
       renderCarrito();
-    }
+    };
 
-    async function confirmarPedido() {
+    window.confirmarPedido = async function() {
       if (carrito.length === 0) return mostrarToast("⚠️ El carrito está vacío", "#e53935");
 
       try {
@@ -502,33 +514,22 @@
         await set(contadorRef, nuevoId);
         mostrarToast(`✅ Pedido confirmado — N° ${nuevoPedido.idOrden}`, "#4caf50");
         vaciarCarrito();
-      } catch (err) {
+      } catch(err) {
         console.error(err);
-        mostrarToast("❌ Error al confirmar pedido", "#e53935");
+        mostrarToast("❌ Error al enviar el pedido", "#e53935");
       }
-    }
+    };
 
-    async function reiniciarPedidos() {
-      if (!confirm("⚠️ Esto borrará todos los pedidos y reiniciará el contador. ¿Seguro?")) return;
+    window.reiniciarPedidos = async function() {
       try {
         await remove(ref(db, "pedidos"));
         await set(ref(db, "contador/ultimoId"), 0);
-        mostrarToast("✅ Todos los pedidos fueron reiniciados", "#4caf50");
-        vaciarCarrito();
-      } catch (err) {
+        mostrarToast("🔄 Pedidos reiniciados", "#ff9800");
+      } catch(err) {
         console.error(err);
         mostrarToast("❌ Error al reiniciar pedidos", "#e53935");
       }
-    }
-
-    window.seleccionarProducto = seleccionarProducto;
-    window.cerrarModal = cerrarModal;
-    window.agregarConSalsas = agregarConSalsas;
-    window.agregarPanceta = agregarPanceta;
-    window.vaciarCarrito = vaciarCarrito;
-    window.confirmarPedido = confirmarPedido;
-    window.cambiarCantidad = cambiarCantidad;
-    window.reiniciarPedidos = reiniciarPedidos;
+    };
   </script>
 </body>
 </html>
